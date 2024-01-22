@@ -53,12 +53,9 @@ extension FPCamera {
     rotation.x -= mouseDelta.y * FPCameraConfiguration.mouseRotationSpeed.x
     rotation.y += mouseDelta.x * FPCameraConfiguration.mouseRotationSpeed.y
     
-    var touchDelta = InputController.shared.touchDelta
-    if touchDelta != float2.zero {
-      touchDelta = normalize(touchDelta)
-    }
-    rotation.x += touchDelta.y * FPCameraConfiguration.touchRotationSpeed.x
-    rotation.y += touchDelta.x * FPCameraConfiguration.touchRotationSpeed.y
+    let rightThumbstickValue = InputController.shared.rightThumbstickDelta
+    rotation.y += rightThumbstickValue.x * FPCameraConfiguration.controllerRotationSpeed.y
+    rotation.x -= rightThumbstickValue.y * FPCameraConfiguration.controllerRotationSpeed.x
     
     self.transform.rotation.y += rotation.y * deltaTime
     self.transform.rotation.x += rotation.x * deltaTime
@@ -79,6 +76,10 @@ extension FPCamera {
       direction = normalize(direction)
     }
     
+    let leftThumbstickValue = InputController.shared.leftThumbstickDelta
+    direction.x += leftThumbstickValue.x
+    direction.z += leftThumbstickValue.y
+    
     let zComponent = direction.z * transform.forwardVector
     let xComponent = direction.x * transform.rightVector
     
@@ -91,4 +92,5 @@ struct FPCameraConfiguration {
   static let moveSpeed: Float = 5
   static let mouseRotationSpeed: float2 = float2(0.6, 1.0)
   static let touchRotationSpeed: float2 = float2(1.2, 2.0)
+  static let controllerRotationSpeed: float2 = float2(1.2, 2.0)
 }

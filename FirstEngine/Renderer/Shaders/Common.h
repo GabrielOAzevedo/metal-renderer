@@ -67,7 +67,7 @@ typedef struct {
   vector_float3 attenuation;
   float coneAngle;
   vector_float3 coneDirection;
-  float cone_attenuation;
+  float coneAttenuation;
 } Light;
 
 #endif /* Common_h */

@@ -7,6 +7,7 @@
 
 import MetalKit
 import SwiftUI
+import GameController
 
 struct MetalView: View {
   @State private var metalView: MTKView = MTKView()
@@ -15,20 +16,16 @@ struct MetalView: View {
   @State private var gameEngine: GameEngine?
   
   var body: some View {
-    MetalViewRepresentable(metalView: $metalView).onAppear {
-      renderer = Renderer(metalView: metalView)
-      gameScene = GameScene()
-      gameEngine = GameEngine(mtkView: metalView, renderer: renderer!, currentScene: gameScene!)
+    ZStack {
+      MetalViewRepresentable(metalView: $metalView).onAppear {
+        renderer = Renderer(metalView: metalView)
+        gameScene = GameScene()
+        gameEngine = GameEngine(mtkView: metalView, renderer: renderer!, currentScene: gameScene!)
+      }
     }
-    .gesture(DragGesture(minimumDistance: 0)
-      .onChanged { value in
-        InputController.updateTouchGesture(value: value)
-      }
-      .onEnded { _ in
-        InputController.resetTouchTranslation()
-      }
-    )
-    
+    .onTapGesture(coordinateSpace: .global) { location in
+      InputController.updateTapPosition(value: location)
+    }
   }
 }
 

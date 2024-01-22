@@ -17,9 +17,12 @@ class InputController {
   var rightMouseDown: Bool = false
   var mouseDelta: float2 = float2.zero
   var mouseScroll: float2 = float2.zero
+  
   var touchLocation: float2?
-  var previousTouchTranslation: float2 = float2.zero
-  var touchDelta: float2 = float2.zero
+  
+  var virtualController: GCVirtualController?
+  var leftThumbstickDelta: float2 = float2.zero
+  var rightThumbstickDelta: float2 = float2.zero
   
   private init() {
     let center = NotificationCenter.default
@@ -33,9 +36,22 @@ class InputController {
       object: nil,
       queue: nil,
       using: addMouseHandlers)
+    center.addObserver(
+      forName: .GCControllerDidConnect,
+      object: nil,
+      queue: nil,
+      using: addControllerHandlers)
     #if os(macOS)
       NSEvent.addLocalMonitorForEvents(
         matching: [.keyUp, .keyDown]) { _ in nil }
+    #endif
+    #if os(iOS)
+    let virtualConfiguration = GCVirtualController.Configuration()
+    virtualConfiguration.elements = [GCInputLeftThumbstick, GCInputRightThumbstick]
+    virtualController = GCVirtualController(configuration: virtualConfiguration)
+    virtualController!.connect { error in
+      print(error ?? "failed to connect to controller")
+    }
     #endif
   }
   
@@ -76,6 +92,23 @@ class InputController {
       self.mouseScroll = float2(xValue, yValue)
     }
   }
+  
+  func addControllerHandlers(notification: Notification) {
+    guard let _controller = notification.object as? GCController else {
+      return
+    }
+    
+    _controller.extendedGamepad?.leftThumbstick.valueChangedHandler = onLeftThumbstickChange
+    _controller.extendedGamepad?.rightThumbstick.valueChangedHandler = onRightThumbstickChange
+  }
+  
+  func onLeftThumbstickChange(_ direction: GCControllerDirectionPad, _ xVal: Float, _ yVal: Float) -> Void {
+    Self.shared.leftThumbstickDelta = float2(xVal, yVal)
+  }
+  
+  func onRightThumbstickChange(_ direction: GCControllerDirectionPad, _ xVal: Float, _ yVal: Float) -> Void {
+    Self.shared.rightThumbstickDelta = float2(xVal, yVal)
+  }
 }
 
 extension InputController {
@@ -89,21 +122,11 @@ extension InputController {
     return mouseDelta
   }
   
-  static func updateTouchGesture(value: DragGesture.Value) {
-    Self.shared.touchLocation = float2(Float(value.location.x), Float(value.location.y))
-    Self.shared.touchDelta = float2(
-      Float(value.translation.width) - Self.shared.previousTouchTranslation.x,
-      Float(value.translation.height) - Self.shared.previousTouchTranslation.y
-    )
-    Self.shared.previousTouchTranslation = float2(Float(value.translation.width), Float(value.translation.height))
-    if abs(value.translation.width) > 1.0 || abs(value.translation.height) > 1.0 {
-      Self.shared.touchLocation = nil
-    }
+  static func updateTapPosition(value: CGPoint) {
+    Self.shared.touchLocation = float2(Float(value.x), Float(value.y))
   }
   
   static func resetTouchTranslation() {
-    Self.shared.previousTouchTranslation = .zero
-    Self.shared.touchDelta = .zero
     Self.shared.touchLocation = .zero
   }
 }

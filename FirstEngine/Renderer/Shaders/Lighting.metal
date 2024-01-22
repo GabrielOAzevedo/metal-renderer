@@ -55,7 +55,7 @@ float3 phongLighting(
           float spotResult = dot(lightDirection, -coneDirection);
           if (spotResult > cos(light.coneAngle)) {
             float attenuation = 1.0 / (light.attenuation.x + light.attenuation.y * d * light.attenuation.z * d * d);
-            attenuation *= pow(spotResult, light.cone_attenuation);
+            attenuation *= pow(spotResult, light.coneAttenuation);
             float diffuseIntensity = saturate(dot(lightDirection, normal));
             float3 color = light.color * baseColor * diffuseIntensity;
             color *= attenuation;
