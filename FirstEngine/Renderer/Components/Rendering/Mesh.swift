@@ -13,6 +13,8 @@ class Mesh {
   var mtkMesh: MTKMesh?
   var mdlMesh: MDLMesh?
   var textureTiling: UInt32 = 1
+  var shininess: UInt32 = 32
+  var specularColor: float3 = float3(1, 1, 1)
   
   var vertexBuffers: [MTLBuffer] = []
   

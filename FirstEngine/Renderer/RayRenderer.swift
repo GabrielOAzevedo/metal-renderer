@@ -37,6 +37,7 @@ class RayRenderer: NSObject {
       fatalError("Failed to init pipeline state")
     }
     self.pipelineState = pipelineState
+    self.params = Params()
     
     super.init()
     
@@ -49,7 +50,8 @@ class RayRenderer: NSObject {
 
 extension RayRenderer: MTKViewDelegate {
   func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-    self.params = Params(width: UInt32(size.width), height: UInt32(size.height), time: time)
+    params.width = uint(view.bounds.width)
+    params.height = uint(view.bounds.height)
     self.aspectRatio = Float(view.bounds.width) / Float(view.bounds.height)
   }
   

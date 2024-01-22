@@ -38,6 +38,7 @@ class Renderer: NSObject {
     }
     self.pipelineState = pipelineState
     self.depthStencilState = Self.buildDepthStencilState()
+    self.params = Params()
     
     super.init()
     
@@ -49,11 +50,12 @@ class Renderer: NSObject {
 
 extension Renderer {
   func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-    self.params = Params(width: UInt32(size.width), height: UInt32(size.height), time: time)
+    self.params.width = UInt32(size.width)
+    self.params.height = UInt32(size.height)
     self.aspectRatio = Float(view.bounds.width) / Float(view.bounds.height)
   }
   
-  func draw(in view: MTKView, scene: GameScene) {
+  func draw(in view: MTKView, scene: GameScene, deltaTime: Float) {
     guard let commandBuffer = Self.commandQueue.makeCommandBuffer(),
       let descriptor = view.currentRenderPassDescriptor,
       let renderEncoder =
@@ -64,9 +66,12 @@ extension Renderer {
     
     renderEncoder.setRenderPipelineState(pipelineState)
     renderEncoder.setDepthStencilState(depthStencilState)
-    setUniformsBuffer(renderEncoder: renderEncoder, camera: scene.camera)
     
+    setUniformsBuffer(renderEncoder: renderEncoder, camera: scene.camera)
+    setParamsBuffer(renderEncoder: renderEncoder, scene: scene, deltaTime: deltaTime)
+    setLightsBuffer(renderEncoder: renderEncoder, sceneLights: scene.lights)
     drawMeshes(renderEncoder: renderEncoder, gameObjects: scene.gameObjects)
+    
     renderEncoder.endEncoding()
     
     guard let drawable = view.currentDrawable else {
@@ -78,9 +83,6 @@ extension Renderer {
   }
   
   func drawMeshes(renderEncoder: MTLRenderCommandEncoder, gameObjects: [GameObject]) {
-    let paramsBuffer = Self.device.makeBuffer(bytes: &params, length: MemoryLayout<Params>.stride)
-    renderEncoder.setFragmentBuffer(paramsBuffer, offset: 0, index: Int(ParamsBuffer.rawValue))
-    
     for object in gameObjects {
       renderObject(gameObject: object, renderEncoder: renderEncoder)
     }
@@ -95,12 +97,16 @@ extension Renderer {
     }
     
     let modelMatrix = gameObject.transform.modelMatrix
-    var vertexParams = VertexParams(modelMatrix: modelMatrix)
+    let normalMatrix = modelMatrix.upperLeft
+    var vertexParams = VertexParams(modelMatrix: modelMatrix, normalMatrix: normalMatrix)
     renderEncoder.setVertexBytes(&vertexParams, length: MemoryLayout<VertexParams>.stride, index: Int(VertexParamsBuffer.rawValue))
     
     for submesh in gameObject.model.mesh.submeshes {
       renderEncoder.setFragmentTexture(submesh.textures.baseColor, index: Int(BaseColor.rawValue))
-      var fragmentParams = FragmentParams(tiling: gameObject.model.mesh.textureTiling)
+      var fragmentParams = FragmentParams()
+      fragmentParams.tiling = gameObject.model.mesh.textureTiling
+      fragmentParams.materialShininess = gameObject.model.mesh.shininess
+      fragmentParams.materialSpecularColor = gameObject.model.mesh.specularColor
       renderEncoder.setFragmentBytes(&fragmentParams, length: MemoryLayout<FragmentParams>.stride, index: Int(FragmentParamsBuffer.rawValue))
       renderEncoder.drawIndexedPrimitives(
         type: .triangle,
@@ -117,6 +123,22 @@ extension Renderer {
     var uniforms = Uniforms(viewMatrix: viewMatrix, projectionMatrix: projectionMatrix)
     let uniformsBuffer = Self.device.makeBuffer(bytes: &uniforms, length: MemoryLayout<Uniforms>.stride)
     renderEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: Int(UniformsBuffer.rawValue))
+  }
+  
+  func setParamsBuffer(renderEncoder: MTLRenderCommandEncoder, scene: GameScene, deltaTime: Float) {
+    params.time += deltaTime
+    params.lightCount = UInt32(scene.lights.count)
+    params.cameraPosition = scene.camera.transform.position
+    let paramsBuffer = Self.device.makeBuffer(bytes: &params, length: MemoryLayout<Params>.stride)
+    renderEncoder.setFragmentBuffer(paramsBuffer, offset: 0, index: Int(ParamsBuffer.rawValue))
+  }
+  
+  func setLightsBuffer(renderEncoder: MTLRenderCommandEncoder, sceneLights: [Light]) {
+    let lights = sceneLights
+    renderEncoder.setFragmentBytes(
+      lights,
+      length: MemoryLayout<Light>.stride * sceneLights.count,
+      index: Int(LightsBuffer.rawValue))
   }
   
   static func buildDepthStencilState() -> MTLDepthStencilState? {

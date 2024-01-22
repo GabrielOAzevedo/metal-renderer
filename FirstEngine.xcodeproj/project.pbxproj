@@ -28,6 +28,11 @@
 		2355C28A2B5DA833009C84AD /* InputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2355C2892B5DA833009C84AD /* InputController.swift */; };
 		2355C28D2B5DDB41009C84AD /* FPCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2355C28C2B5DDB41009C84AD /* FPCamera.swift */; };
 		2355C28F2B5DDB66009C84AD /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2355C28E2B5DDB66009C84AD /* OrthographicCamera.swift */; };
+		2355C2922B5DE557009C84AD /* Sunlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2355C2912B5DE557009C84AD /* Sunlight.swift */; };
+		2355C2952B5DECAB009C84AD /* Lighting.metal in Sources */ = {isa = PBXBuildFile; fileRef = 2355C2942B5DECAB009C84AD /* Lighting.metal */; };
+		2355C2972B5DF03C009C84AD /* AmbientLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2355C2962B5DF03C009C84AD /* AmbientLight.swift */; };
+		2355C2992B5DF07A009C84AD /* Light.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2355C2982B5DF07A009C84AD /* Light.swift */; };
+		2355C29B2B5DF6E4009C84AD /* sphere.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 2355C29A2B5DF6E4009C84AD /* sphere.usdz */; };
 		236DD2582B53D5650093E308 /* FirstEngineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236DD2572B53D5650093E308 /* FirstEngineApp.swift */; };
 		236DD25A2B53D5650093E308 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236DD2592B53D5650093E308 /* ContentView.swift */; };
 		236DD25C2B53D5660093E308 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 236DD25B2B53D5660093E308 /* Assets.xcassets */; };
@@ -60,6 +65,12 @@
 		2355C2892B5DA833009C84AD /* InputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputController.swift; sourceTree = "<group>"; };
 		2355C28C2B5DDB41009C84AD /* FPCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPCamera.swift; sourceTree = "<group>"; };
 		2355C28E2B5DDB66009C84AD /* OrthographicCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrthographicCamera.swift; sourceTree = "<group>"; };
+		2355C2912B5DE557009C84AD /* Sunlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sunlight.swift; sourceTree = "<group>"; };
+		2355C2932B5DEC9E009C84AD /* Lighting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Lighting.h; sourceTree = "<group>"; };
+		2355C2942B5DECAB009C84AD /* Lighting.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Lighting.metal; sourceTree = "<group>"; };
+		2355C2962B5DF03C009C84AD /* AmbientLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLight.swift; sourceTree = "<group>"; };
+		2355C2982B5DF07A009C84AD /* Light.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Light.swift; sourceTree = "<group>"; };
+		2355C29A2B5DF6E4009C84AD /* sphere.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = sphere.usdz; sourceTree = "<group>"; };
 		236DD2542B53D5650093E308 /* FirstEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirstEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		236DD2572B53D5650093E308 /* FirstEngineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstEngineApp.swift; sourceTree = "<group>"; };
 		236DD2592B53D5650093E308 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -111,6 +122,8 @@
 				2355C1F32B54B4CD009C84AD /* Common.h */,
 				2355C20D2B59DF17009C84AD /* Raymarching.metal */,
 				2355C2132B5A7A24009C84AD /* SDF.h */,
+				2355C2932B5DEC9E009C84AD /* Lighting.h */,
+				2355C2942B5DECAB009C84AD /* Lighting.metal */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
@@ -126,6 +139,7 @@
 		2355C2002B57FE2B009C84AD /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				2355C29A2B5DF6E4009C84AD /* sphere.usdz */,
 				2355C2792B5C665E009C84AD /* floorbrick.usdz */,
 				2355C2012B57FE3A009C84AD /* mushroom.usdz */,
 			);
@@ -145,6 +159,7 @@
 		2355C2082B592842009C84AD /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				2355C2902B5DE548009C84AD /* Lights */,
 				2355C28B2B5DDB38009C84AD /* Cameras */,
 				2355C2092B59284D009C84AD /* GameObject.swift */,
 				2355C20F2B59E065009C84AD /* Plane.swift */,
@@ -195,6 +210,16 @@
 				2355C28E2B5DDB66009C84AD /* OrthographicCamera.swift */,
 			);
 			path = Cameras;
+			sourceTree = "<group>";
+		};
+		2355C2902B5DE548009C84AD /* Lights */ = {
+			isa = PBXGroup;
+			children = (
+				2355C2912B5DE557009C84AD /* Sunlight.swift */,
+				2355C2962B5DF03C009C84AD /* AmbientLight.swift */,
+				2355C2982B5DF07A009C84AD /* Light.swift */,
+			);
+			path = Lights;
 			sourceTree = "<group>";
 		};
 		236DD24B2B53D5650093E308 = {
@@ -297,6 +322,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2355C27A2B5C665E009C84AD /* floorbrick.usdz in Resources */,
+				2355C29B2B5DF6E4009C84AD /* sphere.usdz in Resources */,
 				2355C2022B57FE3A009C84AD /* mushroom.usdz in Resources */,
 				236DD2602B53D5660093E308 /* Preview Assets.xcassets in Resources */,
 				236DD25C2B53D5660093E308 /* Assets.xcassets in Resources */,
@@ -317,6 +343,7 @@
 				236DD2692B53DB600093E308 /* Renderer.swift in Sources */,
 				2355C2072B592750009C84AD /* Transform.swift in Sources */,
 				2355C1F52B5558D9009C84AD /* PipelineStates.swift in Sources */,
+				2355C2972B5DF03C009C84AD /* AmbientLight.swift in Sources */,
 				2355C20E2B59DF17009C84AD /* Raymarching.metal in Sources */,
 				2355C28D2B5DDB41009C84AD /* FPCamera.swift in Sources */,
 				2355C27C2B5C6A43009C84AD /* TextureController.swift in Sources */,
@@ -325,6 +352,9 @@
 				2355C2842B5DA003009C84AD /* GameEngine.swift in Sources */,
 				2355C1F82B55A83D009C84AD /* MathLibrary.swift in Sources */,
 				2355C1F22B54B4BE009C84AD /* Shaders.metal in Sources */,
+				2355C2922B5DE557009C84AD /* Sunlight.swift in Sources */,
+				2355C2952B5DECAB009C84AD /* Lighting.metal in Sources */,
+				2355C2992B5DF07A009C84AD /* Light.swift in Sources */,
 				2355C20C2B59DD3C009C84AD /* RayRenderer.swift in Sources */,
 				236DD2672B53D5760093E308 /* MetalView.swift in Sources */,
 				236DD25A2B53D5650093E308 /* ContentView.swift in Sources */,

@@ -32,6 +32,6 @@ extension GameEngine: MTKViewDelegate {
     let deltaTime = Float(currentTime - lastTime)
     lastTime = currentTime
     currentScene.update(deltaTime: deltaTime)
-    renderer.draw(in: view, scene: currentScene)
+    renderer.draw(in: view, scene: currentScene, deltaTime: deltaTime)
   }
 }
