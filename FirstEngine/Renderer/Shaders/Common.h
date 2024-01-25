@@ -14,6 +14,11 @@ typedef enum {
   VertexBuffer = 0
 } VertexAttributes;
 
+typedef struct {
+  matrix_float4x4 viewMatrix;
+  matrix_float4x4 projectionMatrix;
+} CameraMatrices;
+
 typedef enum {
   UniformsBuffer = 11,
   ParamsBuffer = 12,
@@ -23,18 +28,14 @@ typedef enum {
 } Buffers;
 
 typedef enum {
-  BaseColor = 1
+  BaseColor = 1,
+  ShadowTextureIndex = 15
 } Textures;
 
 typedef struct {
-  matrix_float4x4 viewMatrix;
-  matrix_float4x4 projectionMatrix;
+  CameraMatrices mainCameraMatrices;
+  CameraMatrices shadowCameraMatrices;
 } Uniforms;
-
-typedef struct {
-  matrix_float4x4 modelMatrix;
-  matrix_float3x3 normalMatrix;
-} VertexParams;
 
 typedef struct {
   uint width;
@@ -43,6 +44,11 @@ typedef struct {
   uint lightCount;
   vector_float3 cameraPosition;
 } Params;
+
+typedef struct {
+  matrix_float4x4 modelMatrix;
+  matrix_float3x3 normalMatrix;
+} VertexParams;
 
 typedef struct {
   uint tiling;

@@ -57,3 +57,9 @@ extension Model {
     }
   }
 }
+
+extension Model {
+  func render(renderEncoder: MTLRenderCommandEncoder, transform: Transform) {
+    self.mesh.render(renderEncoder: renderEncoder, transform: transform)
+  }
+}

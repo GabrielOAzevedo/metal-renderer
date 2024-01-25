@@ -49,8 +49,17 @@ class GameScene {
     gameObject2.transform.position.x += 2
     gameObjects.append(gameObject2)
     
+    let model4 = Model(name: "sphere.usdz", device: Renderer.device)
+    let gameObject4 = GameObject(model: model4)
+    gameObject4.transform.position.y -= 1
+    gameObject4.transform.position.x += 15
+    gameObject4.transform.position.z += 15
+    gameObjects.append(gameObject4)
+    
     let plane = Model(planeWithExtent: [200, 200, 200], device: Renderer.device)
-    plane.mesh.textureTiling = 128
+    for submesh in plane.mesh.submeshes {
+      submesh.textureTiling = 128
+    }
     plane.setTexture(name: "Grass", textureIndex: BaseColor)
     let gameObject3 = GameObject(model: plane)
     gameObject3.transform.rotation.z = Float(-90).degreesToRadians

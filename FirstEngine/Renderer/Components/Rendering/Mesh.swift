@@ -12,9 +12,6 @@ class Mesh {
   var submeshes: [Submesh] = []
   var mtkMesh: MTKMesh?
   var mdlMesh: MDLMesh?
-  var textureTiling: UInt32 = 1
-  var shininess: UInt32 = 32
-  var specularColor: float3 = float3(1, 1, 1)
   
   var vertexBuffers: [MTLBuffer] = []
   
@@ -41,6 +38,26 @@ class Mesh {
     
     submeshes = zip(mdlSubmeshes, mtkSubmeshes).map { mesh in
       Submesh(mdlSubmesh: mesh.0 as! MDLSubmesh, mtkSubmesh: mesh.1)
+    }
+  }
+}
+
+extension Mesh {
+  func render(renderEncoder: MTLRenderCommandEncoder, transform: Transform) {
+    for (index, buffer) in self.vertexBuffers.enumerated() {
+      renderEncoder.setVertexBuffer(
+        buffer,
+        offset: 0,
+        index: index)
+    }
+    
+    let modelMatrix = transform.modelMatrix
+    let normalMatrix = modelMatrix.upperLeft
+    var vertexParams = VertexParams(modelMatrix: modelMatrix, normalMatrix: normalMatrix)
+    renderEncoder.setVertexBytes(&vertexParams, length: MemoryLayout<VertexParams>.stride, index: Int(VertexParamsBuffer.rawValue))
+    
+    for submesh in submeshes {
+      submesh.render(renderEncoder: renderEncoder)
     }
   }
 }

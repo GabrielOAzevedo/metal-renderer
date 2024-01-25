@@ -20,7 +20,9 @@ class InputController {
   
   var touchLocation: float2?
   
+  #if os(iOS)
   var virtualController: GCVirtualController?
+  #endif
   var leftThumbstickDelta: float2 = float2.zero
   var rightThumbstickDelta: float2 = float2.zero
   
@@ -49,9 +51,7 @@ class InputController {
     let virtualConfiguration = GCVirtualController.Configuration()
     virtualConfiguration.elements = [GCInputLeftThumbstick, GCInputRightThumbstick]
     virtualController = GCVirtualController(configuration: virtualConfiguration)
-    virtualController!.connect { error in
-      print(error ?? "failed to connect to controller")
-    }
+    virtualController!.connect()
     #endif
   }
   

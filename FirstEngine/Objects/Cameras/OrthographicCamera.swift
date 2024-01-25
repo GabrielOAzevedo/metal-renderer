@@ -6,6 +6,7 @@
 //
 
 import CoreGraphics
+import MetalKit
 
 class OrthographicCamera: Camera {
   var transform: Transform = Transform()
@@ -26,6 +27,8 @@ class OrthographicCamera: Camera {
   init(transform: Transform) {
     self.transform = transform
   }
+  
+  init() {}
 }
 
 extension OrthographicCamera {

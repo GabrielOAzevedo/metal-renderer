@@ -8,7 +8,7 @@
 import MetalKit
 
 struct PipelineStates {
-  static func buildDefaultPipelineStateObject(library: MTLLibrary, colorPixelFormat: MTLPixelFormat) -> MTLRenderPipelineState? {
+  static func buildDefaultPSO(library: MTLLibrary, colorPixelFormat: MTLPixelFormat) -> MTLRenderPipelineState? {
     let vertexFunction = Renderer.library.makeFunction(name: "vertex_main")
     let fragmentFunction = Renderer.library.makeFunction(name: "fragment_main")
     let pipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -19,6 +19,18 @@ struct PipelineStates {
     let vertexDescriptor = MTLVertexDescriptor.defaultLayout
     pipelineDescriptor.vertexDescriptor = vertexDescriptor
     
+    return try? Renderer.device.makeRenderPipelineState(descriptor: pipelineDescriptor)
+  }
+  
+  static func buildShadowPSO() -> MTLRenderPipelineState? {
+    let vertexFunction = Renderer.library.makeFunction(name: "vertex_shadow")
+    let fragmentFunction = Renderer.library.makeFunction(name: "fragment_shadow")
+    let pipelineDescriptor = MTLRenderPipelineDescriptor()
+    pipelineDescriptor.vertexFunction = vertexFunction
+    pipelineDescriptor.fragmentFunction = fragmentFunction
+    pipelineDescriptor.colorAttachments[0].pixelFormat = .invalid
+    pipelineDescriptor.depthAttachmentPixelFormat = .depth32Float
+    pipelineDescriptor.vertexDescriptor = .defaultLayout
     return try? Renderer.device.makeRenderPipelineState(descriptor: pipelineDescriptor)
   }
   

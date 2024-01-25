@@ -5,6 +5,8 @@
 //  Created by Gabriel Azevedo on 18/01/24.
 //
 
+import MetalKit
+
 class GameObject {
   var model: Model
   var transform: Transform

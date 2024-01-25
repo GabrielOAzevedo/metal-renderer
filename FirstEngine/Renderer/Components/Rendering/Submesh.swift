@@ -12,6 +12,9 @@ class Submesh {
   var textures: Textures
   var mdlSubmesh: MDLSubmesh
   var mtkSubmesh: MTKSubmesh
+  var textureTiling: UInt32 = 1
+  var shininess: UInt32 = 32
+  var specularColor: float3 = float3(1, 1, 1)
   
   init(mdlSubmesh: MDLSubmesh, mtkSubmesh: MTKSubmesh) {
     textures = Textures(material: mdlSubmesh.material)
@@ -44,5 +47,22 @@ private extension MDLMaterial {
         return TextureController.loadTexture(texture: mdlTexture, name: property.textureName)
       }
     return nil
+  }
+}
+
+extension Submesh {
+  func render(renderEncoder: MTLRenderCommandEncoder) {
+    renderEncoder.setFragmentTexture(self.textures.baseColor, index: Int(BaseColor.rawValue))
+    var fragmentParams = FragmentParams()
+    fragmentParams.tiling = self.textureTiling
+    fragmentParams.materialShininess = self.shininess
+    fragmentParams.materialSpecularColor = self.specularColor
+    renderEncoder.setFragmentBytes(&fragmentParams, length: MemoryLayout<FragmentParams>.stride, index: Int(FragmentParamsBuffer.rawValue))
+    renderEncoder.drawIndexedPrimitives(
+      type: .triangle,
+      indexCount: self.mdlSubmesh.indexCount,
+      indexType: self.mtkSubmesh.indexType,
+      indexBuffer: self.mtkSubmesh.indexBuffer.buffer,
+      indexBufferOffset: 0)
   }
 }
