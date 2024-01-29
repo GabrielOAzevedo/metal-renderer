@@ -6,7 +6,7 @@
 //
 
 class Sunlight {
-  var light: Light
+  var light: Light  
   
   init() {
     self.light = Light()

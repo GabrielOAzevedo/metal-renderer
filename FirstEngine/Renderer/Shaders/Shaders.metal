@@ -73,8 +73,6 @@ fragment float4 fragment_main(
                       address::clamp_to_edge,
                       compare_func::less);
   
-  // Checks if the shadow position is inside the bounds of the
-  // shadow texture
   float visibility = 1.0;
   if (xy.y < 1 && xy.y > 0 && xy.x < 1 && xy.x > 0) {
     float shadowSample = shadowTexture.sample(s, xy);

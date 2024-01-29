@@ -44,6 +44,8 @@ extension FPCamera {
     var rotation = float2.zero
     let qPressed = InputController.getKeyPressed(key: .keyQ)
     let ePressed = InputController.getKeyPressed(key: .keyE)
+    let tPressed = InputController.getKeyPressed(key: .keyT)
+    let yPressed = InputController.getKeyPressed(key: .keyY)
     rotation.y += (qPressed ? -1 : 0) + (ePressed ? 1 : 0) * FPCameraConfiguration.rotationSpeed
     
     var mouseDelta = InputController.getAndResetMouseDelta()
@@ -59,6 +61,11 @@ extension FPCamera {
     
     self.transform.rotation.y += rotation.y * deltaTime
     self.transform.rotation.x += rotation.x * deltaTime
+    if (tPressed) {
+      self.transform.rotation.y = Float(180).degreesToRadians
+    } else if (yPressed) {
+      self.transform.rotation.y = Float(0).degreesToRadians      
+    }
   }
   
   func updatePosition(deltaTime:Float) {

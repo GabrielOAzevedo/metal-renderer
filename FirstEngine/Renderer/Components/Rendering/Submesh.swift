@@ -65,4 +65,19 @@ extension Submesh {
       indexBuffer: self.mtkSubmesh.indexBuffer.buffer,
       indexBufferOffset: 0)
   }
+  
+  func renderLines(renderEncoder: MTLRenderCommandEncoder) {
+    renderEncoder.setFragmentTexture(self.textures.baseColor, index: Int(BaseColor.rawValue))
+    var fragmentParams = FragmentParams()
+    fragmentParams.tiling = self.textureTiling
+    fragmentParams.materialShininess = self.shininess
+    fragmentParams.materialSpecularColor = self.specularColor
+    renderEncoder.setFragmentBytes(&fragmentParams, length: MemoryLayout<FragmentParams>.stride, index: Int(FragmentParamsBuffer.rawValue))
+    renderEncoder.drawIndexedPrimitives(
+      type: .line,
+      indexCount: self.mdlSubmesh.indexCount,
+      indexType: self.mtkSubmesh.indexType,
+      indexBuffer: self.mtkSubmesh.indexBuffer.buffer,
+      indexBufferOffset: 0)
+  }
 }

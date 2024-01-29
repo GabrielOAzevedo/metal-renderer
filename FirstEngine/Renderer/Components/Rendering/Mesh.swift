@@ -60,4 +60,22 @@ extension Mesh {
       submesh.render(renderEncoder: renderEncoder)
     }
   }
+  
+  func renderLines(renderEncoder: MTLRenderCommandEncoder, transform: Transform) {
+    for (index, buffer) in self.vertexBuffers.enumerated() {
+      renderEncoder.setVertexBuffer(
+        buffer,
+        offset: 0,
+        index: index)
+    }
+    
+    let modelMatrix = transform.modelMatrix
+    let normalMatrix = modelMatrix.upperLeft
+    var vertexParams = VertexParams(modelMatrix: modelMatrix, normalMatrix: normalMatrix)
+    renderEncoder.setVertexBytes(&vertexParams, length: MemoryLayout<VertexParams>.stride, index: Int(VertexParamsBuffer.rawValue))
+    
+    for submesh in submeshes {
+      submesh.renderLines(renderEncoder: renderEncoder)
+    }
+  }
 }

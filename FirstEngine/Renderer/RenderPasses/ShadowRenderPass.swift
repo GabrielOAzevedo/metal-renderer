@@ -66,9 +66,8 @@ extension ShadowRenderPass {
   }
   
   func setUniformsBuffer(renderEncoder: MTLRenderCommandEncoder, scene: GameScene, uniforms: inout Uniforms) {
-    let cameraPos = scene.camera.transform.position
-    let shadowCameraPos = adjustCameraPosition(scene: scene, cameraPos: cameraPos)
-    let center = defineLookAtCenter(targetPos: cameraPos)
+    let shadowCameraPos = adjustCameraPosition(scene: scene, camera: scene.camera)
+    let center = defineLookAtCenter(scene: scene, camera: scene.camera)
     
     let viewMatrix = float4x4(eye: shadowCameraPos, center: center, up: [0, 1, 0])
     let projectionMatrix = self.shadowCamera.projectionMatrix
@@ -79,24 +78,27 @@ extension ShadowRenderPass {
     renderEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: Int(UniformsBuffer.rawValue))
   }
   
-  func adjustCameraPosition(scene: GameScene, cameraPos: float3) -> float3 {
+  func adjustCameraPosition(scene: GameScene, camera: Camera) -> float3 {
     let sun = scene.lights[0]
-    
-    // The following multiplication is necessary to push the camera position
-    // higher up in the sky so the orthographic box is bigger
-    self.shadowCamera.transform.position = sun.position * (Float(shadowCamera.far) / 10)
-    var shadowCameraPos = self.shadowCamera.transform.position
-    shadowCameraPos.x += cameraPos.x
-    shadowCameraPos.z += cameraPos.z
+    let sunHigherUp = normalize(sun.position) * (Float(shadowCamera.far) / 10)
+    self.shadowCamera.transform.position = sunHigherUp
+    let shadowCameraPos = getCameraForwardPosition(camera: camera) + self.shadowCamera.transform.position
     
     return shadowCameraPos
   }
   
-  func defineLookAtCenter(targetPos: float3) -> float3 {
-    var center: float3 = .zero
-    center.x += targetPos.x
-    center.z += targetPos.z
-    return center
+  func defineLookAtCenter(scene: GameScene, camera: Camera) -> float3 {
+    let center: float3 = .zero
+    return getCameraForwardPosition(camera: camera) + center
+  }
+  
+  func getCameraForwardPosition(camera: Camera) -> float3 {
+    let cameraTransform = float3(
+      camera.transform.position.x,
+      0,
+      camera.transform.position.z
+    )
+    return (camera.transform.forwardVector * (Float(shadowCamera.viewSize) / 4)) + cameraTransform
   }
   
   func setParamsBuffer(renderEncoder: MTLRenderCommandEncoder, params: Params) {

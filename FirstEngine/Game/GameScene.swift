@@ -12,9 +12,11 @@ class GameScene {
   var camera: Camera
   var lights: [Light] = []
   
+  var elapsedTime: Float = 0
+  
   init() {
     let camera = FPCamera()
-    camera.transform.position = [0, 1.4, -8.0]
+    camera.transform.position = [0.0, 1.4, 0.0]
     self.camera = camera
     
     initLights()
@@ -23,11 +25,12 @@ class GameScene {
   
   func initLights() {
     let sun = Sunlight()
-    sun.light.position = [1, 2, -2]
+    sun.light.position = [0, 1, 0]
+    sun.light.specularColor = [0.1, 0.1, 0.1]
     lights.append(sun.light)
     
     let secondSun = Sunlight()
-    secondSun.light.position = [-1, -2, 2]
+    secondSun.light.position = -sun.light.position
     secondSun.light.color = [0.4, 0.4, 0.4]
     secondSun.light.specularColor = [0.01, 0.01, 0.01]
     lights.append(secondSun.light)
@@ -37,17 +40,12 @@ class GameScene {
   }
   
   func initModels() {
-    let model = Model(name: "floorbrick.usdz", device: Renderer.device)
-    let gameObject = GameObject(model: model)
-    gameObject.transform.position.x -= 2
-    gameObject.transform.position.y -= 1
-    gameObjects.append(gameObject)
+    createObject(name: "floorbrick.usdz", position: float3(-8, -2, 8))
+    createObject(name: "floorbrick.usdz", position: float3(-8, -2, -8))
+    createObject(name: "floorbrick.usdz", position: float3(8, -2, 8))
+    createObject(name: "floorbrick.usdz", position: float3(8, -2, -8))
     
-    let model2 = Model(name: "sphere.usdz", device: Renderer.device)
-    let gameObject2 = GameObject(model: model2)
-    gameObject2.transform.position.y -= 1
-    gameObject2.transform.position.x += 2
-    gameObjects.append(gameObject2)
+    createObject(name: "sphere.usdz", position: float3(0, 0, 30))
     
     let model4 = Model(name: "sphere.usdz", device: Renderer.device)
     let gameObject4 = GameObject(model: model4)
@@ -66,6 +64,13 @@ class GameScene {
     gameObject3.transform.position.y -= 2.5
     gameObjects.append(gameObject3)
   }
+  
+  func createObject(name: String, position: float3) {
+      let model = Model(name: name, device: Renderer.device)
+      let gameObject = GameObject(model: model)
+      gameObject.transform.position = position
+      gameObjects.append(gameObject)
+  }
 }
 
 extension GameScene {
@@ -74,6 +79,10 @@ extension GameScene {
   }
   
   func update(deltaTime: Float) {
-    camera.update(deltaTime: deltaTime)
+    elapsedTime += deltaTime / 4
+    self.camera.update(deltaTime: deltaTime)
+    self.lights[0].position.x = sin(elapsedTime)
+    self.lights[0].position.z = cos(elapsedTime)
+    self.lights[1].position = -self.lights[0].position
   }
 }

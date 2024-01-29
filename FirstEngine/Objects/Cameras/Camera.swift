@@ -8,6 +8,8 @@
 import CoreGraphics
 
 protocol Camera {
+  var far: Float { get set }
+  var near: Float { get set }
   var transform: Transform { get set }
   var projectionMatrix: float4x4 { get }
   var viewMatrix: float4x4 { get }

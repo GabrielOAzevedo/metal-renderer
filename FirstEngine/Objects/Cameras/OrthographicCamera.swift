@@ -28,7 +28,8 @@ class OrthographicCamera: Camera {
     self.transform = transform
   }
   
-  init() {}
+  init() {
+  }
 }
 
 extension OrthographicCamera {
