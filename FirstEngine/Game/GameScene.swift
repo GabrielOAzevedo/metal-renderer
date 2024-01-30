@@ -17,6 +17,7 @@ class GameScene {
   init() {
     let camera = FPCamera()
     camera.transform.position = [0.0, 1.4, 0.0]
+    camera.far = 100
     self.camera = camera
     
     initLights()
@@ -29,13 +30,8 @@ class GameScene {
     sun.light.specularColor = [0.1, 0.1, 0.1]
     lights.append(sun.light)
     
-    let secondSun = Sunlight()
-    secondSun.light.position = -sun.light.position
-    secondSun.light.color = [0.4, 0.4, 0.4]
-    secondSun.light.specularColor = [0.01, 0.01, 0.01]
-    lights.append(secondSun.light)
-    
     let ambientLight = AmbientLight()
+    ambientLight.light.color = [0.125, 0.125, 0.125]
     lights.append(ambientLight.light)
   }
   
@@ -45,7 +41,9 @@ class GameScene {
     createObject(name: "floorbrick.usdz", position: float3(8, -2, 8))
     createObject(name: "floorbrick.usdz", position: float3(8, -2, -8))
     
-    createObject(name: "sphere.usdz", position: float3(0, 0, 30))
+    createObject(name: "tree.usdz", position: float3(0, -2, 30))
+    createObject(name: "tree.usdz", position: float3(9, -2, 27), rotation: float3(0, 180, 0))
+    createObject(name: "tree.usdz", position: float3(-8, -2, 38))
     
     let model4 = Model(name: "sphere.usdz", device: Renderer.device)
     let gameObject4 = GameObject(model: model4)
@@ -65,10 +63,11 @@ class GameScene {
     gameObjects.append(gameObject3)
   }
   
-  func createObject(name: String, position: float3) {
+  func createObject(name: String, position: float3, rotation: float3 = [0, 0, 0]) {
       let model = Model(name: name, device: Renderer.device)
       let gameObject = GameObject(model: model)
       gameObject.transform.position = position
+      gameObject.transform.rotation = rotation
       gameObjects.append(gameObject)
   }
 }
@@ -81,8 +80,5 @@ extension GameScene {
   func update(deltaTime: Float) {
     elapsedTime += deltaTime / 4
     self.camera.update(deltaTime: deltaTime)
-    self.lights[0].position.x = sin(elapsedTime)
-    self.lights[0].position.z = cos(elapsedTime)
-    self.lights[1].position = -self.lights[0].position
   }
 }

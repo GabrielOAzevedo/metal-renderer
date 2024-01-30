@@ -13,7 +13,7 @@ class Submesh {
   var mdlSubmesh: MDLSubmesh
   var mtkSubmesh: MTKSubmesh
   var textureTiling: UInt32 = 1
-  var shininess: UInt32 = 32
+  var shininess: UInt32 = 1
   var specularColor: float3 = float3(1, 1, 1)
   
   init(mdlSubmesh: MDLSubmesh, mtkSubmesh: MTKSubmesh) {

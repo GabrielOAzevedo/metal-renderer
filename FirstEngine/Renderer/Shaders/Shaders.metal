@@ -48,6 +48,8 @@ vertex VertexOut vertex_main(
   return out;
 }
 
+constant float shadowBias = 0.005;
+
 fragment float4 fragment_main(
   VertexOut in [[stage_in]],
   constant Params &params [[buffer(ParamsBuffer)]],
@@ -76,7 +78,7 @@ fragment float4 fragment_main(
   float visibility = 1.0;
   if (xy.y < 1 && xy.y > 0 && xy.x < 1 && xy.x > 0) {
     float shadowSample = shadowTexture.sample(s, xy);
-    if (shadowPosition.z - 0.0001 > shadowSample) {
+    if (shadowPosition.z - shadowBias > shadowSample) {
       visibility -= 0.5;
     }
     color *= visibility;

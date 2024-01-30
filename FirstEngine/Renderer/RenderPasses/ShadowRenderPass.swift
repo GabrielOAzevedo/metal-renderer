@@ -15,12 +15,13 @@ class ShadowRenderPass: RenderPass {
   var shadowTexture: MTLTexture?
   var params: Params = Params()
   var shadowCamera: OrthographicCamera
+  let textureSize = 512 * 4
   
   init() {
     self.depthStencilState = Self.buildDepthStencilState()
     self.pipelineState = PipelineStates.buildShadowPSO()!
     self.shadowTexture = Self.makeTexture(
-      size: CGSize(width: 2048, height: 2048),
+      size: CGSize(width: textureSize, height: textureSize),
       pixelFormat: .depth32Float,
       label: "Shadow Texture")
     self.shadowCamera = OrthographicCamera()

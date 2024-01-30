@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23149DA52B67C413008E6C70 /* tree.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 23149DA42B67C413008E6C70 /* tree.usdz */; };
 		2355C1F22B54B4BE009C84AD /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 2355C1F12B54B4BE009C84AD /* Shaders.metal */; };
 		2355C1F52B5558D9009C84AD /* PipelineStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2355C1F42B5558D9009C84AD /* PipelineStates.swift */; };
 		2355C1F82B55A83D009C84AD /* MathLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2355C1F72B55A83D009C84AD /* MathLibrary.swift */; };
@@ -46,6 +47,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		23149DA42B67C413008E6C70 /* tree.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = tree.usdz; sourceTree = "<group>"; };
 		2355C1F12B54B4BE009C84AD /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		2355C1F32B54B4CD009C84AD /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		2355C1F42B5558D9009C84AD /* PipelineStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipelineStates.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 		2355C2002B57FE2B009C84AD /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				23149DA42B67C413008E6C70 /* tree.usdz */,
 				2355C29A2B5DF6E4009C84AD /* sphere.usdz */,
 				2355C2792B5C665E009C84AD /* floorbrick.usdz */,
 				2355C2012B57FE3A009C84AD /* mushroom.usdz */,
@@ -346,6 +349,7 @@
 				2355C2022B57FE3A009C84AD /* mushroom.usdz in Resources */,
 				236DD2602B53D5660093E308 /* Preview Assets.xcassets in Resources */,
 				236DD25C2B53D5660093E308 /* Assets.xcassets in Resources */,
+				23149DA52B67C413008E6C70 /* tree.usdz in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

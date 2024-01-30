@@ -9,6 +9,9 @@
 using namespace metal;
 #import "Lighting.h"
 
+constant float MIN_DIFFUSE = 0.5;
+constant float MAX_DIFFUSE = 0.85;
+
 float3 phongLighting(
   float3 normal,
   float3 position,
@@ -24,7 +27,7 @@ float3 phongLighting(
       switch (light.type) {
         case Sun: {
           float3 lightDirection = normalize(-light.position);
-          float diffuseIntensity = saturate(-dot(lightDirection, normal));
+          float diffuseIntensity = clamp(saturate(-dot(lightDirection, normal)), MIN_DIFFUSE, MAX_DIFFUSE);
           diffuseColor += light.color * baseColor * diffuseIntensity;
           if (diffuseIntensity > 0) {
             float3 reflection = reflect(lightDirection, normal);
