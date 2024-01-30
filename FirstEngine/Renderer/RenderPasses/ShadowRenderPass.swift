@@ -25,7 +25,7 @@ class ShadowRenderPass: RenderPass {
       pixelFormat: .depth32Float,
       label: "Shadow Texture")
     self.shadowCamera = OrthographicCamera()
-    shadowCamera.viewSize = 32
+    shadowCamera.viewSize = 64
     shadowCamera.far = 100
   }
   

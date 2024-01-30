@@ -48,7 +48,8 @@ vertex VertexOut vertex_main(
   return out;
 }
 
-constant float shadowBias = 0.005;
+constant float MIN_SHADOW_BIAS = 0.004;
+constant float MAX_SHADOW_BIAS = 0.05;
 
 fragment float4 fragment_main(
   VertexOut in [[stage_in]],
@@ -76,10 +77,16 @@ fragment float4 fragment_main(
                       compare_func::less);
   
   float visibility = 1.0;
+  float3 lightDir = normalize(lights[0].position);
+  float dotProd = dot(normalDirection, lightDir);
+  float bias = MIN_SHADOW_BIAS;
   if (xy.y < 1 && xy.y > 0 && xy.x < 1 && xy.x > 0) {
     float shadowSample = shadowTexture.sample(s, xy);
-    if (shadowPosition.z - shadowBias > shadowSample) {
+    /*if (dotProd < 0) {
       visibility -= 0.5;
+    } else*/
+    if (shadowPosition.z - bias > shadowSample) {
+      visibility -= 0.6 * abs(dotProd);
     }
     color *= visibility;
   }
