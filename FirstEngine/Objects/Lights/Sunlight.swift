@@ -13,7 +13,6 @@ class Sunlight {
     self.light.position = [0, 0, 0]
     self.light.color = [1, 1, 1]
     self.light.specularColor = [0.6, 0.6, 0.6]
-    self.light.attenuation = [1, 0, 0]
     self.light.type = Sun
   }
 }

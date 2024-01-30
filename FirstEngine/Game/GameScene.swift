@@ -26,12 +26,12 @@ class GameScene {
   
   func initLights() {
     let sun = Sunlight()
-    sun.light.position = [0, 1, 0]
-    sun.light.specularColor = [0.1, 0.1, 0.1]
+    sun.light.position = [-0.4, 1, 0.5]
+    sun.light.specularColor = [0.01, 0.01, 0.01]
     lights.append(sun.light)
     
     let ambientLight = AmbientLight()
-    ambientLight.light.color = [0.125, 0.125, 0.125]
+    ambientLight.light.color = [0.05, 0.05, 0.05]
     lights.append(ambientLight.light)
   }
   
@@ -80,5 +80,7 @@ extension GameScene {
   func update(deltaTime: Float) {
     elapsedTime += deltaTime / 4
     self.camera.update(deltaTime: deltaTime)
+    self.lights[0].position.x = sin(elapsedTime * 0.1)
+    self.lights[0].position.z = cos(elapsedTime * 0.1)
   }
 }

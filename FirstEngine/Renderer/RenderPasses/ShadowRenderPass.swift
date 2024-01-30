@@ -15,7 +15,7 @@ class ShadowRenderPass: RenderPass {
   var shadowTexture: MTLTexture?
   var params: Params = Params()
   var shadowCamera: OrthographicCamera
-  let textureSize = 512 * 4
+  let textureSize = 512 * 16
   
   init() {
     self.depthStencilState = Self.buildDepthStencilState()
@@ -26,7 +26,7 @@ class ShadowRenderPass: RenderPass {
       label: "Shadow Texture")
     self.shadowCamera = OrthographicCamera()
     shadowCamera.viewSize = 64
-    shadowCamera.far = 100
+    shadowCamera.far = 150
   }
   
   func resize(view: MTKView, size: CGSize) {
@@ -47,6 +47,7 @@ class ShadowRenderPass: RenderPass {
     renderEncoder.label = "Shadow Render Encoder"
     renderEncoder.setDepthStencilState(self.depthStencilState)
     renderEncoder.setRenderPipelineState(self.pipelineState)
+    renderEncoder.setCullMode(.front)
     
     setUniformsBuffer(renderEncoder: renderEncoder,
                       scene: scene,
@@ -81,7 +82,7 @@ extension ShadowRenderPass {
   
   func adjustCameraPosition(scene: GameScene, camera: Camera) -> float3 {
     let sun = scene.lights[0]
-    let sunHigherUp = normalize(sun.position) * (Float(shadowCamera.far) / 10)
+    let sunHigherUp = normalize(sun.position) * (Float(shadowCamera.far) / 2)
     self.shadowCamera.transform.position = sunHigherUp
     let shadowCameraPos = getCameraForwardPosition(camera: camera) + self.shadowCamera.transform.position
     

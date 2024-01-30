@@ -9,8 +9,9 @@
 using namespace metal;
 #import "Lighting.h"
 
-constant float MIN_DIFFUSE = 0.5;
-constant float MAX_DIFFUSE = 0.85;
+constant float MIN_DIFFUSE = 0.4;
+constant float MAX_DIFFUSE = 1.0;
+constant float DOT_FACTOR = 1.5;
 
 float3 phongLighting(
   float3 normal,
@@ -28,7 +29,7 @@ float3 phongLighting(
         case Sun: {
           float3 lightDirection = normalize(-light.position);
           float diffuseIntensity = clamp(saturate(-dot(lightDirection, normal)), MIN_DIFFUSE, MAX_DIFFUSE);
-          diffuseColor += light.color * baseColor * diffuseIntensity;
+          diffuseColor += light.color * baseColor * diffuseIntensity * (1.0 - dot(lightDirection, normal) / DOT_FACTOR);
           if (diffuseIntensity > 0) {
             float3 reflection = reflect(lightDirection, normal);
             float3 viewDirection = normalize(params.cameraPosition);

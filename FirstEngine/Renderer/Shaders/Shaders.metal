@@ -48,8 +48,7 @@ vertex VertexOut vertex_main(
   return out;
 }
 
-constant float MIN_SHADOW_BIAS = 0.004;
-constant float MAX_SHADOW_BIAS = 0.05;
+constant float MIN_SHADOW_BIAS = 0.00001;
 
 fragment float4 fragment_main(
   VertexOut in [[stage_in]],
@@ -63,7 +62,6 @@ fragment float4 fragment_main(
   constexpr sampler textureSampler(filter::linear, address::repeat, mip_filter::linear, max_anisotropy(8));
   float3 baseColor = baseColorTexture.sample(textureSampler, in.uv * fragmentParams.tiling).rgb;
   float3 normalDirection = normalize(in.worldNormal);
-  float3 color = phongLighting(normalDirection, in.worldPosition, params, lights, fragmentParams, baseColor);
   
   float3 shadowPosition = in.shadowPosition.xyz / in.shadowPosition.w;
   float2 xy = shadowPosition.xy;
@@ -76,20 +74,20 @@ fragment float4 fragment_main(
                       address::clamp_to_edge,
                       compare_func::less);
   
+  float3 newColor = baseColor;
   float visibility = 1.0;
-  float3 lightDir = normalize(lights[0].position);
-  float dotProd = dot(normalDirection, lightDir);
   float bias = MIN_SHADOW_BIAS;
   if (xy.y < 1 && xy.y > 0 && xy.x < 1 && xy.x > 0) {
     float shadowSample = shadowTexture.sample(s, xy);
-    /*if (dotProd < 0) {
-      visibility -= 0.5;
-    } else*/
     if (shadowPosition.z - bias > shadowSample) {
-      visibility -= 0.6 * abs(dotProd);
+      visibility -= 0.5;
     }
-    color *= visibility;
+    newColor *= visibility;
+  } else {
+    return float4(1, 0, 0, 1);
   }
-  return float4(color, 1);
+  float3 color = phongLighting(normalDirection, in.worldPosition, params, lights, fragmentParams, baseColor);
+  float3 finalColor = min(color, newColor);
+  return float4(finalColor, 1);
 }
 
