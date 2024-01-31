@@ -44,6 +44,8 @@
 		236DD2602B53D5660093E308 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 236DD25F2B53D5660093E308 /* Preview Assets.xcassets */; };
 		236DD2672B53D5760093E308 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236DD2662B53D5760093E308 /* MetalView.swift */; };
 		236DD2692B53DB600093E308 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236DD2682B53DB600093E308 /* Renderer.swift */; };
+		237C71182B69C06700CC7552 /* PBR.metal in Sources */ = {isa = PBXBuildFile; fileRef = 237C71172B69C06700CC7552 /* PBR.metal */; };
+		237C711A2B6A4CF700CC7552 /* teapot.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 237C71192B6A4CF700CC7552 /* teapot.usdz */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,6 +91,8 @@
 		236DD25F2B53D5660093E308 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		236DD2662B53D5760093E308 /* MetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
 		236DD2682B53DB600093E308 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		237C71172B69C06700CC7552 /* PBR.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = PBR.metal; sourceTree = "<group>"; };
+		237C71192B6A4CF700CC7552 /* teapot.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = teapot.usdz; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +140,7 @@
 				2355C2932B5DEC9E009C84AD /* Lighting.h */,
 				2355C2942B5DECAB009C84AD /* Lighting.metal */,
 				2355C2A52B628989009C84AD /* Shadow.metal */,
+				237C71172B69C06700CC7552 /* PBR.metal */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
@@ -151,6 +156,7 @@
 		2355C2002B57FE2B009C84AD /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				237C71192B6A4CF700CC7552 /* teapot.usdz */,
 				23149DA42B67C413008E6C70 /* tree.usdz */,
 				2355C29A2B5DF6E4009C84AD /* sphere.usdz */,
 				2355C2792B5C665E009C84AD /* floorbrick.usdz */,
@@ -347,6 +353,7 @@
 				2355C27A2B5C665E009C84AD /* floorbrick.usdz in Resources */,
 				2355C29B2B5DF6E4009C84AD /* sphere.usdz in Resources */,
 				2355C2022B57FE3A009C84AD /* mushroom.usdz in Resources */,
+				237C711A2B6A4CF700CC7552 /* teapot.usdz in Resources */,
 				236DD2602B53D5660093E308 /* Preview Assets.xcassets in Resources */,
 				236DD25C2B53D5660093E308 /* Assets.xcassets in Resources */,
 				23149DA52B67C413008E6C70 /* tree.usdz in Resources */,
@@ -374,6 +381,7 @@
 				2355C29D2B6083FD009C84AD /* RenderPass.swift in Sources */,
 				2355C2A02B6085A9009C84AD /* ForwardRenderPass.swift in Sources */,
 				2355C27C2B5C6A43009C84AD /* TextureController.swift in Sources */,
+				237C71182B69C06700CC7552 /* PBR.metal in Sources */,
 				2355C28A2B5DA833009C84AD /* InputController.swift in Sources */,
 				2355C2102B59E065009C84AD /* Plane.swift in Sources */,
 				2355C2842B5DA003009C84AD /* GameEngine.swift in Sources */,

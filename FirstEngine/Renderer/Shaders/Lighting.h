@@ -17,4 +17,17 @@ float3 phongLighting(
   constant FragmentParams &fragmentParams,
   float3 baseColor);
 
+// PBR functions
+float3 computeSpecular(
+  constant Light *lights,
+  constant Params &params,
+  Material material,
+  float3 normal);
+
+float3 computeDiffuse(
+  constant Light *lights,
+  constant Params &params,
+  Material material,
+  float3 normal);
+
 #endif /* Lighting_h */

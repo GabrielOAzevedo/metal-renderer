@@ -17,6 +17,10 @@ class Mesh {
   
   init(mdlMesh: MDLMesh) {
     self.mdlMesh = mdlMesh
+    self.mdlMesh?.addTangentBasis(
+      forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate,
+      tangentAttributeNamed: MDLVertexAttributeTangent,
+      bitangentAttributeNamed: MDLVertexAttributeBitangent)
     let mtkMesh = try? MTKMesh(mesh: mdlMesh, device: Renderer.device)
     self.mtkMesh = mtkMesh
     

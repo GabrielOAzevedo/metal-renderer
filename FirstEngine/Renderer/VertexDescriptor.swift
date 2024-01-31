@@ -12,14 +12,14 @@ extension MDLVertexDescriptor {
     let vertexDescriptor = MDLVertexDescriptor()
     var offset: Int = 0
     
-    vertexDescriptor.attributes[0] = MDLVertexAttribute(
+    vertexDescriptor.attributes[Int(PositionAttribute.rawValue)] = MDLVertexAttribute(
       name: MDLVertexAttributePosition,
       format: .float3,
       offset: 0,
       bufferIndex: Int(VertexBuffer.rawValue))
     offset += MemoryLayout<float3>.stride
     
-    vertexDescriptor.attributes[1] = MDLVertexAttribute(
+    vertexDescriptor.attributes[Int(NormalAttribute.rawValue)] = MDLVertexAttribute(
       name: MDLVertexAttributeNormal,
       format: .float3,
       offset: offset,
@@ -27,13 +27,29 @@ extension MDLVertexDescriptor {
     )
     offset += MemoryLayout<float3>.stride
     
-    vertexDescriptor.attributes[2] = MDLVertexAttribute(
+    vertexDescriptor.attributes[Int(UVAttribute.rawValue)] = MDLVertexAttribute(
       name: MDLVertexAttributeTextureCoordinate,
       format: .float2,
       offset: offset,
       bufferIndex: Int(VertexBuffer.rawValue)
     )
     offset += MemoryLayout<float2>.stride
+    
+    vertexDescriptor.attributes[Int(TangentAttribute.rawValue)] = MDLVertexAttribute(
+      name: MDLVertexAttributeTangent,
+      format: .float3,
+      offset: offset,
+      bufferIndex: Int(VertexBuffer.rawValue)
+    )
+    offset += MemoryLayout<float3>.stride
+    
+    vertexDescriptor.attributes[Int(BitangentAttribute.rawValue)] = MDLVertexAttribute(
+      name: MDLVertexAttributeBitangent,
+      format: .float3,
+      offset: offset,
+      bufferIndex: Int(VertexBuffer.rawValue)
+    )
+    offset += MemoryLayout<float3>.stride
     
     vertexDescriptor.layouts[0] = MDLVertexBufferLayout(stride: offset)
     

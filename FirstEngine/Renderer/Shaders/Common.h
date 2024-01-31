@@ -20,16 +20,29 @@ typedef struct {
 } CameraMatrices;
 
 typedef enum {
+  PositionAttribute = 0,
+  NormalAttribute = 1,
+  UVAttribute = 2,
+  TangentAttribute = 3,
+  BitangentAttribute = 4
+} Attributes;
+
+typedef enum {
   UniformsBuffer = 11,
   ParamsBuffer = 12,
   VertexParamsBuffer = 13,
   FragmentParamsBuffer = 14,
-  LightsBuffer = 15
+  LightsBuffer = 15,
+  ShadowTextureIndex = 16,
+  MaterialBuffer = 17
 } Buffers;
 
 typedef enum {
-  BaseColor = 1,
-  ShadowTextureIndex = 15
+  BaseColorTexture = 1,
+  NormalTexture = 2,
+  RoughnessTexture = 3,
+  MetallicTexture = 4,
+  AOTexture = 5
 } Textures;
 
 typedef struct {
@@ -75,5 +88,12 @@ typedef struct {
   vector_float3 coneDirection;
   float coneAttenuation;
 } Light;
+
+typedef struct {
+  vector_float3 baseColor;
+  float roughness;
+  float metallic;
+  float ambientOcclusion;
+} Material;
 
 #endif /* Common_h */

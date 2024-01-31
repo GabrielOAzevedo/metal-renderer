@@ -12,24 +12,31 @@ class Submesh {
   var textures: Textures
   var mdlSubmesh: MDLSubmesh
   var mtkSubmesh: MTKSubmesh
+  var material: Material
   var textureTiling: UInt32 = 1
   var shininess: UInt32 = 1
   var specularColor: float3 = float3(1, 1, 1)
   
+  
   init(mdlSubmesh: MDLSubmesh, mtkSubmesh: MTKSubmesh) {
-    textures = Textures(material: mdlSubmesh.material)
     self.mdlSubmesh = mdlSubmesh
     self.mtkSubmesh = mtkSubmesh
+    textures = Textures(material: mdlSubmesh.material)
+    material = Material(material: mdlSubmesh.material)
   }
   
   struct Textures {
     var baseColor: MTLTexture?
+    var roughness: MTLTexture?
+    var normal: MTLTexture?
   }
 }
 
 private extension Submesh.Textures {
   init(material: MDLMaterial?) {
     baseColor = material?.texture(type: .baseColor)
+    roughness = material?.texture(type: .roughness)
+    normal = material?.texture(type: .tangentSpaceNormal)
   }
 }
 
@@ -50,9 +57,27 @@ private extension MDLMaterial {
   }
 }
 
+private extension Material {
+  init(material: MDLMaterial?) {
+    self.init()
+    if let baseColor = material?.property(with: .baseColor),
+       baseColor.type == .float3 {
+      self.baseColor = baseColor.float3Value
+    }
+    if let roughness = material?.property(with: .roughness),
+       roughness.type == .float {
+      self.roughness = roughness.floatValue
+    }
+    ambientOcclusion = 1
+  }
+}
+
 extension Submesh {
   func render(renderEncoder: MTLRenderCommandEncoder) {
-    renderEncoder.setFragmentTexture(self.textures.baseColor, index: Int(BaseColor.rawValue))
+    renderEncoder.setFragmentTexture(self.textures.baseColor, index: Int(BaseColorTexture.rawValue))
+    renderEncoder.setFragmentTexture(self.textures.roughness, index: Int(RoughnessTexture.rawValue))
+    renderEncoder.setFragmentTexture(self.textures.normal, index: Int(NormalTexture.rawValue))
+    renderEncoder.setFragmentBytes(&material, length: MemoryLayout<Material>.stride, index: Int(MaterialBuffer.rawValue))
     var fragmentParams = FragmentParams()
     fragmentParams.tiling = self.textureTiling
     fragmentParams.materialShininess = self.shininess
@@ -67,7 +92,9 @@ extension Submesh {
   }
   
   func renderLines(renderEncoder: MTLRenderCommandEncoder) {
-    renderEncoder.setFragmentTexture(self.textures.baseColor, index: Int(BaseColor.rawValue))
+    renderEncoder.setFragmentTexture(self.textures.baseColor, index: Int(BaseColorTexture.rawValue))
+    renderEncoder.setFragmentTexture(self.textures.roughness, index: Int(RoughnessTexture.rawValue))
+    renderEncoder.setFragmentTexture(self.textures.normal, index: Int(NormalTexture.rawValue))
     var fragmentParams = FragmentParams()
     fragmentParams.tiling = self.textureTiling
     fragmentParams.materialShininess = self.shininess

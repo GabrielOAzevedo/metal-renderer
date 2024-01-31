@@ -10,15 +10,19 @@ using namespace metal;
 #import "Lighting.h"
 
 struct VertexIn {
-  float4 position [[attribute(0)]];
-  float3 normal [[attribute(1)]];
-  float2 uv [[attribute(2)]];
+  float4 position [[attribute(PositionAttribute)]];
+  float3 normal [[attribute(NormalAttribute)]];
+  float2 uv [[attribute(UVAttribute)]];
+  float3 tangent [[attribute(TangentAttribute)]];
+  float3 bitangent [[attribute(BitangentAttribute)]];
 };
 
 struct VertexOut {
   float4 position [[position]];
   float3 worldPosition;
   float3 worldNormal;
+  float3 worldTangent;
+  float3 worldBitangent;
   float3 normal;
   float4 color;
   float2 uv;
@@ -42,6 +46,8 @@ vertex VertexOut vertex_main(
   float4 worldPosition = vertexParams.modelMatrix * in.position;
   out.worldPosition = worldPosition.xyz / worldPosition.w;
   out.worldNormal = vertexParams.normalMatrix * in.normal;
+  out.worldTangent = vertexParams.normalMatrix * in.tangent;
+  out.worldBitangent = vertexParams.normalMatrix * in.bitangent;
   out.normal = in.normal;
   out.color = float4(1, 0, 0, 1);
   out.uv = in.uv;
@@ -50,19 +56,8 @@ vertex VertexOut vertex_main(
 
 constant float MIN_SHADOW_BIAS = 0.00001;
 
-fragment float4 fragment_main(
-  VertexOut in [[stage_in]],
-  constant Params &params [[buffer(ParamsBuffer)]],
-  texture2d<float> baseColorTexture [[texture(BaseColor)]],
-  constant FragmentParams &fragmentParams [[buffer(FragmentParamsBuffer)]],
-  constant Light *lights [[buffer(LightsBuffer)]],
-  depth2d<float> shadowTexture [[texture(ShadowTextureIndex)]]
-) {
-  
-  constexpr sampler textureSampler(filter::linear, address::repeat, mip_filter::linear, max_anisotropy(8));
-  float3 baseColor = baseColorTexture.sample(textureSampler, in.uv * fragmentParams.tiling).rgb;
-  float3 normalDirection = normalize(in.worldNormal);
-  
+float3 calculateShadows(VertexOut in, float3 baseColor, depth2d<float> shadowTexture) {
+  float3 newColor = baseColor;
   float3 shadowPosition = in.shadowPosition.xyz / in.shadowPosition.w;
   float2 xy = shadowPosition.xy;
   xy = xy * 0.5  + 0.5;
@@ -74,7 +69,6 @@ fragment float4 fragment_main(
                       address::clamp_to_edge,
                       compare_func::less);
   
-  float3 newColor = baseColor;
   float visibility = 1.0;
   float bias = MIN_SHADOW_BIAS;
   if (xy.y < 1 && xy.y > 0 && xy.x < 1 && xy.x > 0) {
@@ -83,11 +77,50 @@ fragment float4 fragment_main(
       visibility -= 0.5;
     }
     newColor *= visibility;
-  } else {
-    return float4(1, 0, 0, 1);
   }
-  float3 color = phongLighting(normalDirection, in.worldPosition, params, lights, fragmentParams, baseColor);
-  float3 finalColor = min(color, newColor);
+  return newColor;
+}
+
+fragment float4 fragment_main(
+  VertexOut in [[stage_in]],
+  constant Params &params [[buffer(ParamsBuffer)]],
+  texture2d<float> baseColorTexture [[texture(BaseColorTexture)]],
+  texture2d<float> roughnessTexture [[texture(RoughnessTexture)]],
+  texture2d<float> normalTexture [[texture(NormalTexture)]],
+  constant FragmentParams &fragmentParams [[buffer(FragmentParamsBuffer)]],
+  constant Light *lights [[buffer(LightsBuffer)]],
+  depth2d<float> shadowTexture [[texture(ShadowTextureIndex)]],
+  constant Material &_material [[buffer(MaterialBuffer)]]
+) {
+  Material material = _material;
+  constexpr sampler textureSampler(filter::linear, address::repeat, mip_filter::linear, max_anisotropy(8));
+  
+  float3 normal;
+  if (is_null_texture(normalTexture)) {
+    normal = in.worldNormal;
+  } else {
+    normal = normalTexture.sample(textureSampler, in.uv * fragmentParams.tiling).rgb;
+    normal = normal * 2 - 1;
+    normal = float3x3(in.worldTangent,
+                      in.worldBitangent,
+                      in.worldNormal) * normal;
+  }
+  normal = normalize(normal);
+  
+  if(!is_null_texture(baseColorTexture)) {
+    material.baseColor = baseColorTexture.sample(textureSampler, in.uv * fragmentParams.tiling).rgb;
+  }
+  
+  if (!is_null_texture(roughnessTexture)) {
+    material.roughness = roughnessTexture.sample(textureSampler, in.uv * fragmentParams.tiling).r;
+  }
+  
+  float3 shadow = calculateShadows(in, material.baseColor, shadowTexture);
+  //float3 color = phongLighting(normalDirection, in.worldPosition, params, lights, fragmentParams, material.baseColor);
+  float3 diffuse = computeDiffuse(lights, params, material, normal);
+  float3 specular = computeSpecular(lights, params, material, normal);
+  float3 color = diffuse + specular;
+  float3 finalColor = min(color, shadow);
   return float4(finalColor, 1);
 }
 

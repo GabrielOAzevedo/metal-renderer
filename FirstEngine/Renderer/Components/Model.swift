@@ -47,7 +47,7 @@ extension Model {
   func setTexture(name: String, textureIndex: Textures) {
     if let texture = TextureController.loadTextureFromCatalog(name: name) {
       switch textureIndex {
-        case BaseColor:
+        case BaseColorTexture:
           self.mesh.submeshes.forEach { submesh in
             submesh.textures.baseColor = texture
           }

@@ -27,7 +27,7 @@ class GameScene {
   func initLights() {
     let sun = Sunlight()
     sun.light.position = [-0.4, 1, 0.5]
-    sun.light.specularColor = [0.01, 0.01, 0.01]
+    sun.light.specularColor = [0.1, 0.1, 0.1]
     lights.append(sun.light)
     
     let ambientLight = AmbientLight()
@@ -44,6 +44,7 @@ class GameScene {
     createObject(name: "tree.usdz", position: float3(0, -2, 30))
     createObject(name: "tree.usdz", position: float3(9, -2, 27), rotation: float3(0, 180, 0))
     createObject(name: "tree.usdz", position: float3(-8, -2, 38))
+    createObject(name: "teapot.usdz", position: float3(-8, -0.5, 8), scale: 0.05)
     
     let model4 = Model(name: "sphere.usdz", device: Renderer.device)
     let gameObject4 = GameObject(model: model4)
@@ -56,18 +57,19 @@ class GameScene {
     for submesh in plane.mesh.submeshes {
       submesh.textureTiling = 128
     }
-    plane.setTexture(name: "Grass", textureIndex: BaseColor)
+    plane.setTexture(name: "Grass", textureIndex: BaseColorTexture)
     let gameObject3 = GameObject(model: plane)
     gameObject3.transform.rotation.z = Float(-90).degreesToRadians
     gameObject3.transform.position.y -= 2.5
     gameObjects.append(gameObject3)
   }
   
-  func createObject(name: String, position: float3, rotation: float3 = [0, 0, 0]) {
+  func createObject(name: String, position: float3, rotation: float3 = [0, 0, 0], scale: Float = 1) {
       let model = Model(name: name, device: Renderer.device)
       let gameObject = GameObject(model: model)
       gameObject.transform.position = position
       gameObject.transform.rotation = rotation
+      gameObject.transform.scale = scale
       gameObjects.append(gameObject)
   }
 }
@@ -80,7 +82,7 @@ extension GameScene {
   func update(deltaTime: Float) {
     elapsedTime += deltaTime / 4
     self.camera.update(deltaTime: deltaTime)
-    self.lights[0].position.x = sin(elapsedTime * 0.1)
-    self.lights[0].position.z = cos(elapsedTime * 0.1)
+    self.lights[0].position.x = sin(elapsedTime * 0.5)
+    self.lights[0].position.z = cos(elapsedTime * 0.5)
   }
 }

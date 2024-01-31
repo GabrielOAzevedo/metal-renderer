@@ -20,4 +20,3 @@ vertex float4 vertex_shadow(
     matrix_float4x4 mvp = uniforms.shadowCameraMatrices.projectionMatrix * uniforms.shadowCameraMatrices.viewMatrix * vParams.modelMatrix;
     return mvp * in.position;
 }
-
