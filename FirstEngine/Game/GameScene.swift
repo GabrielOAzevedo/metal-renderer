@@ -26,13 +26,19 @@ class GameScene {
   
   func initLights() {
     let sun = Sunlight()
-    sun.light.position = [-0.4, 1, 0.5]
+    sun.light.position = [0.96, 1, 0.26]
+    sun.light.color = [1.0, 1.0, 1.0]
     sun.light.specularColor = [0.1, 0.1, 0.1]
     lights.append(sun.light)
     
-    let ambientLight = AmbientLight()
-    ambientLight.light.color = [0.05, 0.05, 0.05]
-    lights.append(ambientLight.light)
+    /*for i in 0...10 {
+      let point = Pointlight()
+      let x = Float.random(in: -4...4)
+      let y = Float.random(in: 0...2)
+      let z = Float.random(in: -4...4)
+      point.light.position = [x, y, z]
+      lights.append(point.light)
+    }*/
   }
   
   func initModels() {
@@ -82,7 +88,18 @@ extension GameScene {
   func update(deltaTime: Float) {
     elapsedTime += deltaTime / 4
     self.camera.update(deltaTime: deltaTime)
-    self.lights[0].position.x = sin(elapsedTime * 0.5)
-    self.lights[0].position.z = cos(elapsedTime * 0.5)
+    if (InputController.getKeyPressed(key: .leftArrow)) {
+      self.lights[0].position.x -= 0.01
+    }
+    if InputController.getKeyPressed(key: .rightArrow) {
+        self.lights[0].position.x += 0.01
+    }
+    if (InputController.getKeyPressed(key: .upArrow)) {
+      self.lights[0].position.z += 0.01
+    }
+    if InputController.getKeyPressed(key: .downArrow) {
+        self.lights[0].position.z -= 0.01
+    }
+    print(self.lights[0].position)
   }
 }

@@ -54,31 +54,39 @@ vertex VertexOut vertex_main(
   return out;
 }
 
-constant float MIN_SHADOW_BIAS = 0.00001;
+constant float MIN_SHADOW_BIAS = 0.0001;
 
-float3 calculateShadows(VertexOut in, float3 baseColor, depth2d<float> shadowTexture) {
-  float3 newColor = baseColor;
-  float3 shadowPosition = in.shadowPosition.xyz / in.shadowPosition.w;
+float calculateShadows(VertexOut in, float3 normal, float3 lightDir, float3 baseColor, depth2d<float> shadowTexture) {
+  float3 shadowPosition = in.shadowPosition.xyz;
   float2 xy = shadowPosition.xy;
   xy = xy * 0.5  + 0.5;
   xy.y = 1 - xy.y;
   xy = saturate(xy);
   
   constexpr sampler s(coord::normalized,
-                      filter::linear,
+                      filter::nearest,
                       address::clamp_to_edge,
                       compare_func::less);
   
   float visibility = 1.0;
   float bias = MIN_SHADOW_BIAS;
+  float normalizedDirection = dot(normal, lightDir);
   if (xy.y < 1 && xy.y > 0 && xy.x < 1 && xy.x > 0) {
     float shadowSample = shadowTexture.sample(s, xy);
+    if (normalizedDirection < 0) {
+      return visibility;
+    }
     if (shadowPosition.z - bias > shadowSample) {
       visibility -= 0.5;
     }
-    newColor *= visibility;
   }
-  return newColor;
+  return visibility;
+}
+
+constant float ambienceAmount = 0.3;
+float3 calculateAmbience(Material material, float3 lightReflection) {
+  float3 normalComponent = clamp((1.0 - abs(lightReflection)), 0.2, 1.0);
+  return material.baseColor * (ambienceAmount * normalComponent);
 }
 
 fragment float4 fragment_main(
@@ -113,14 +121,17 @@ fragment float4 fragment_main(
   
   if (!is_null_texture(roughnessTexture)) {
     material.roughness = roughnessTexture.sample(textureSampler, in.uv * fragmentParams.tiling).r;
+  } else {
+    material.roughness = 1;
   }
   
-  float3 shadow = calculateShadows(in, material.baseColor, shadowTexture);
-  //float3 color = phongLighting(normalDirection, in.worldPosition, params, lights, fragmentParams, material.baseColor);
+  float3 lightDir = normalize(lights[0].position);
+  float3 lightReflection = dot(normal, lightDir);
+  float shadow = calculateShadows(in, normal, lightDir, material.baseColor, shadowTexture);
   float3 diffuse = computeDiffuse(lights, params, material, normal);
+  diffuse += calculateAmbience(material, lightReflection);
   float3 specular = computeSpecular(lights, params, material, normal);
-  float3 color = diffuse + specular;
-  float3 finalColor = min(color, shadow);
-  return float4(finalColor, 1);
+  float3 color = (diffuse * shadow) + specular;
+  return float4(color, 1);
 }
 

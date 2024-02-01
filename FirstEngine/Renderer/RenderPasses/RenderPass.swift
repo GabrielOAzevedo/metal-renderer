@@ -20,7 +20,7 @@ protocol RenderPass {
 extension RenderPass {
   static func buildDepthStencilState() -> MTLDepthStencilState? {
     let descriptor = MTLDepthStencilDescriptor()
-    descriptor.depthCompareFunction = .less
+    descriptor.depthCompareFunction = .lessEqual
     descriptor.isDepthWriteEnabled = true
     return Renderer.device.makeDepthStencilState(descriptor: descriptor)
   }

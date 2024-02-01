@@ -30,4 +30,10 @@ float3 computeDiffuse(
   Material material,
   float3 normal);
 
+float3 computeSunlight(
+ constant Light *lights,
+ constant Params &params,
+ Material material,
+ float3 normal);
+
 #endif /* Lighting_h */

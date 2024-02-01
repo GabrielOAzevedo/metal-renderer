@@ -46,6 +46,7 @@
 		236DD2692B53DB600093E308 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236DD2682B53DB600093E308 /* Renderer.swift */; };
 		237C71182B69C06700CC7552 /* PBR.metal in Sources */ = {isa = PBXBuildFile; fileRef = 237C71172B69C06700CC7552 /* PBR.metal */; };
 		237C711A2B6A4CF700CC7552 /* teapot.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 237C71192B6A4CF700CC7552 /* teapot.usdz */; };
+		23C6E0E52B6AF0430028EFDB /* Pointlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C6E0E42B6AF0430028EFDB /* Pointlight.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -93,6 +94,7 @@
 		236DD2682B53DB600093E308 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		237C71172B69C06700CC7552 /* PBR.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = PBR.metal; sourceTree = "<group>"; };
 		237C71192B6A4CF700CC7552 /* teapot.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = teapot.usdz; sourceTree = "<group>"; };
+		23C6E0E42B6AF0430028EFDB /* Pointlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pointlight.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +239,7 @@
 				2355C2912B5DE557009C84AD /* Sunlight.swift */,
 				2355C2962B5DF03C009C84AD /* AmbientLight.swift */,
 				2355C2982B5DF07A009C84AD /* Light.swift */,
+				23C6E0E42B6AF0430028EFDB /* Pointlight.swift */,
 			);
 			path = Lights;
 			sourceTree = "<group>";
@@ -396,6 +399,7 @@
 				2355C2872B5DA245009C84AD /* Camera.swift in Sources */,
 				2355C2802B5D3EEE009C84AD /* Mesh.swift in Sources */,
 				2355C1FF2B574157009C84AD /* VertexDescriptor.swift in Sources */,
+				23C6E0E52B6AF0430028EFDB /* Pointlight.swift in Sources */,
 				236DD2582B53D5650093E308 /* FirstEngineApp.swift in Sources */,
 				2355C28F2B5DDB66009C84AD /* OrthographicCamera.swift in Sources */,
 				2355C2A62B628989009C84AD /* Shadow.metal in Sources */,

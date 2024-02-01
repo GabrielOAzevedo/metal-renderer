@@ -36,7 +36,6 @@ extension ForwardRenderPass {
     renderEncoder.label = "Forward Render Encoder"
     renderEncoder.setRenderPipelineState(pipelineState)
     renderEncoder.setDepthStencilState(depthStencilState)
-    renderEncoder.setCullMode(.none)
     
     setUniformsBuffer(renderEncoder: renderEncoder, camera: scene.camera, uniforms: &uniforms)
     setParamsBuffer(renderEncoder: renderEncoder, params: params)

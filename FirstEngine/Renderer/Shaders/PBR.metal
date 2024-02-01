@@ -62,9 +62,18 @@ float3 computeSpecular(
   return specularTotal;
 }
 
-constant float MIN_DIFFUSE = 0.4;
-constant float MAX_DIFFUSE = 1.0;
-constant float DOT_PARAMS = 2.0;
+float3 computeSunlight(
+ Light light,
+  Params params,
+ Material material,
+ float3 normal
+) {
+  float3 lightDirection = normalize(light.position);
+  float nDotL = saturate(dot(normal, lightDirection));
+  float3 diffuse = float3(material.baseColor) * (1.0 - material.metallic);
+  return diffuse * nDotL * material.ambientOcclusion * light.color;
+}
+
 // diffuse
 float3 computeDiffuse(
   constant Light *lights,
@@ -75,16 +84,24 @@ float3 computeDiffuse(
   float3 diffuseTotal = 0;
   for (uint i = 0; i < params.lightCount; i++) {
     Light light = lights[i];
-    float3 lightDirection = normalize(light.position);
-    if (isnan(lightDirection.x)) {
-      continue;
+    switch(light.type) {
+      case unused: {
+        break;
+      }
+      case Sun: {
+        diffuseTotal += computeSunlight(light, params, material, normal);
+        break;
+      }
+      case Spot: {
+        break;
+      }
+      case Point: {
+        break;
+      }
+      case Ambient: {
+        break;
+      }
     }
-    float nDotL = clamp(saturate(dot(normal, lightDirection)), MIN_DIFFUSE, MAX_DIFFUSE);
-    float angleBase = dot(lightDirection, normal);
-    float3 angledBaseColor = material.baseColor * (1.0 + angleBase / DOT_PARAMS);
-    float3 diffuse = float3(angledBaseColor) * (1.0 - material.metallic);
-    diffuseTotal += diffuse * nDotL * material.ambientOcclusion;
   }
   return diffuseTotal;
 }
-

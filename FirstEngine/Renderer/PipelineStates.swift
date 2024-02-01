@@ -24,10 +24,8 @@ struct PipelineStates {
   
   static func buildShadowPSO() -> MTLRenderPipelineState? {
     let vertexFunction = Renderer.library.makeFunction(name: "vertex_shadow")
-    let fragmentFunction = Renderer.library.makeFunction(name: "fragment_shadow")
     let pipelineDescriptor = MTLRenderPipelineDescriptor()
     pipelineDescriptor.vertexFunction = vertexFunction
-    pipelineDescriptor.fragmentFunction = fragmentFunction
     pipelineDescriptor.colorAttachments[0].pixelFormat = .invalid
     pipelineDescriptor.depthAttachmentPixelFormat = .depth32Float
     pipelineDescriptor.vertexDescriptor = .defaultLayout
