@@ -57,7 +57,7 @@ vertex VertexOut vertex_main(
 constant float MIN_SHADOW_BIAS = 0.0001;
 
 float calculateShadows(VertexOut in, float3 normal, float3 lightDir, float3 baseColor, depth2d<float> shadowTexture) {
-  float3 shadowPosition = in.shadowPosition.xyz;
+  float3 shadowPosition = in.shadowPosition.xyz / in.shadowPosition.w;
   float2 xy = shadowPosition.xy;
   xy = xy * 0.5  + 0.5;
   xy.y = 1 - xy.y;
@@ -74,7 +74,7 @@ float calculateShadows(VertexOut in, float3 normal, float3 lightDir, float3 base
   if (xy.y < 1 && xy.y > 0 && xy.x < 1 && xy.x > 0) {
     float shadowSample = shadowTexture.sample(s, xy);
     if (normalizedDirection < 0) {
-      return visibility;
+      return (visibility - 0.5) * (1.0 - abs(normalizedDirection));
     }
     if (shadowPosition.z - bias > shadowSample) {
       visibility -= 0.5;
@@ -129,9 +129,9 @@ fragment float4 fragment_main(
   float3 lightReflection = dot(normal, lightDir);
   float shadow = calculateShadows(in, normal, lightDir, material.baseColor, shadowTexture);
   float3 diffuse = computeDiffuse(lights, params, material, normal);
-  diffuse += calculateAmbience(material, lightReflection);
+  float3 ambience = calculateAmbience(material, lightReflection);
   float3 specular = computeSpecular(lights, params, material, normal);
-  float3 color = (diffuse * shadow) + specular;
+  float3 color = (diffuse * shadow) + ambience + specular;
   return float4(color, 1);
 }
 
