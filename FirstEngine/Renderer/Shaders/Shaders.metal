@@ -83,7 +83,7 @@ float calculateShadows(VertexOut in, float3 normal, float3 lightDir, float3 base
   return visibility;
 }
 
-constant float ambienceAmount = 0.3;
+constant float ambienceAmount = 0.05;
 float3 calculateAmbience(Material material, float3 lightReflection) {
   float3 normalComponent = clamp((1.0 - abs(lightReflection)), 0.2, 1.0);
   return material.baseColor * (ambienceAmount * normalComponent);

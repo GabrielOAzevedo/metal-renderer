@@ -28,29 +28,9 @@ class GameScene {
     let sun = Sunlight()
     sun.light.position = [0.96, 1, 0.26]
     sun.light.color = [1.0, 1.0, 1.0]
-    //sun.light.color = [0.11, 0.13, 0.31]
+    sun.light.color = [0.11, 0.13, 0.31]
     sun.light.specularColor = [0.1, 0.1, 0.1]
     lights.append(sun.light)
-    
-    /*for i in 0...10 {
-      let point = Pointlight()
-      let x = Float.random(in: -4...4)
-      let y = Float.random(in: 0...2)
-      let z = Float.random(in: -4...4)
-      point.light.position = [x, y, z]
-      point.light.attenuation = [
-        Float.random(in: 0.5...1),
-        Float.random(in: 0.5...1),
-        Float.random(in: 0.5...1),
-      ]
-      point.light.color = [
-        Float.random(in: 0.5...1),
-        Float.random(in: 0.5...1),
-        Float.random(in: 0.5...1),
-      ]
-      point.light.radius = Float.random(in: 0.5...2)
-      lights.append(point.light)
-    }*/
   }
   
   func initModels() {
@@ -112,6 +92,8 @@ extension GameScene {
     if InputController.getKeyPressed(key: .downArrow) {
         self.lights[0].position.z -= 0.01
     }
+    
+    gameObjects[7].transform.rotation.y += sin(deltaTime)
     print(self.lights[0].position)
   }
 }

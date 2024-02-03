@@ -7,12 +7,18 @@
 
 class Transform {
   var position: float3 = [0, 0, 0]
-  var rotation: float3 = [0, 0, 0]
+  var quaternion: simd_quatf = simd_quatf(.identity)
+  var rotation: float3 = [0, 0, 0] {
+    didSet {
+      let rotationMatrix = float4x4(rotation: rotation)
+      self.quaternion = simd_quatf(rotationMatrix)
+    }
+  }
   var scale: Float = 1
   
   var modelMatrix: matrix_float4x4 {
     let translation = matrix_float4x4(translation: self.position)
-    let rotation = matrix_float4x4(rotation: self.rotation)
+    let rotation = float4x4(self.quaternion)
     let scale = matrix_float4x4(scaling: self.scale)
     return translation * rotation * scale
   }

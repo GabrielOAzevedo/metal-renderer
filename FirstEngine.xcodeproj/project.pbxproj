@@ -44,6 +44,10 @@
 		236DD2602B53D5660093E308 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 236DD25F2B53D5660093E308 /* Preview Assets.xcassets */; };
 		236DD2672B53D5760093E308 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236DD2662B53D5760093E308 /* MetalView.swift */; };
 		236DD2692B53DB600093E308 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236DD2682B53DB600093E308 /* Renderer.swift */; };
+		23795A022B6ECF9F0002B45B /* VirtualController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23795A012B6ECF9F0002B45B /* VirtualController.swift */; };
+		23795A042B6ED0190002B45B /* KeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23795A032B6ED0190002B45B /* KeyboardController.swift */; };
+		23795A062B6ED0640002B45B /* MouseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23795A052B6ED0630002B45B /* MouseController.swift */; };
+		23795A082B6ED0DE0002B45B /* TouchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23795A072B6ED0DE0002B45B /* TouchController.swift */; };
 		237C71182B69C06700CC7552 /* PBR.metal in Sources */ = {isa = PBXBuildFile; fileRef = 237C71172B69C06700CC7552 /* PBR.metal */; };
 		237C711A2B6A4CF700CC7552 /* teapot.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 237C71192B6A4CF700CC7552 /* teapot.usdz */; };
 		23C6E0E52B6AF0430028EFDB /* Pointlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C6E0E42B6AF0430028EFDB /* Pointlight.swift */; };
@@ -92,6 +96,10 @@
 		236DD25F2B53D5660093E308 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		236DD2662B53D5760093E308 /* MetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
 		236DD2682B53DB600093E308 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		23795A012B6ECF9F0002B45B /* VirtualController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualController.swift; sourceTree = "<group>"; };
+		23795A032B6ED0190002B45B /* KeyboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardController.swift; sourceTree = "<group>"; };
+		23795A052B6ED0630002B45B /* MouseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseController.swift; sourceTree = "<group>"; };
+		23795A072B6ED0DE0002B45B /* TouchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchController.swift; sourceTree = "<group>"; };
 		237C71172B69C06700CC7552 /* PBR.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = PBR.metal; sourceTree = "<group>"; };
 		237C71192B6A4CF700CC7552 /* teapot.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = teapot.usdz; sourceTree = "<group>"; };
 		23C6E0E42B6AF0430028EFDB /* Pointlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pointlight.swift; sourceTree = "<group>"; };
@@ -135,14 +143,14 @@
 		2355C1F02B54B4B3009C84AD /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				2355C1F12B54B4BE009C84AD /* Shaders.metal */,
 				2355C1F32B54B4CD009C84AD /* Common.h */,
-				2355C20D2B59DF17009C84AD /* Raymarching.metal */,
 				2355C2132B5A7A24009C84AD /* SDF.h */,
 				2355C2932B5DEC9E009C84AD /* Lighting.h */,
+				2355C1F12B54B4BE009C84AD /* Shaders.metal */,
 				2355C2942B5DECAB009C84AD /* Lighting.metal */,
 				2355C2A52B628989009C84AD /* Shadow.metal */,
 				237C71172B69C06700CC7552 /* PBR.metal */,
+				2355C20D2B59DF17009C84AD /* Raymarching.metal */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
@@ -180,6 +188,7 @@
 		2355C2082B592842009C84AD /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				23795A002B6DC0030002B45B /* Effects */,
 				2355C2902B5DE548009C84AD /* Lights */,
 				2355C28B2B5DDB38009C84AD /* Cameras */,
 				2355C2092B59284D009C84AD /* GameObject.swift */,
@@ -208,6 +217,7 @@
 		2355C2852B5DA206009C84AD /* Game */ = {
 			isa = PBXGroup;
 			children = (
+				2355C2002B57FE2B009C84AD /* Models */,
 				2355C2882B5DA82B009C84AD /* Input */,
 				2355C2832B5DA003009C84AD /* GameEngine.swift */,
 				2355C2772B5C56FB009C84AD /* GameScene.swift */,
@@ -218,6 +228,7 @@
 		2355C2882B5DA82B009C84AD /* Input */ = {
 			isa = PBXGroup;
 			children = (
+				23795A092B6ED1040002B45B /* Extensions */,
 				2355C2892B5DA833009C84AD /* InputController.swift */,
 			);
 			path = Input;
@@ -275,7 +286,6 @@
 			children = (
 				2355C2082B592842009C84AD /* Objects */,
 				2355C2852B5DA206009C84AD /* Game */,
-				2355C2002B57FE2B009C84AD /* Models */,
 				2355C1F62B55A811009C84AD /* Utilities */,
 				2355C1EA2B54ABDD009C84AD /* Renderer */,
 				236DD2572B53D5650093E308 /* FirstEngineApp.swift */,
@@ -293,6 +303,24 @@
 				236DD25F2B53D5660093E308 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		23795A002B6DC0030002B45B /* Effects */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Effects;
+			sourceTree = "<group>";
+		};
+		23795A092B6ED1040002B45B /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				23795A012B6ECF9F0002B45B /* VirtualController.swift */,
+				23795A032B6ED0190002B45B /* KeyboardController.swift */,
+				23795A052B6ED0630002B45B /* MouseController.swift */,
+				23795A072B6ED0DE0002B45B /* TouchController.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -371,11 +399,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2355C2782B5C56FB009C84AD /* GameScene.swift in Sources */,
+				23795A022B6ECF9F0002B45B /* VirtualController.swift in Sources */,
 				2355C20A2B59284D009C84AD /* GameObject.swift in Sources */,
 				2355C2052B592651009C84AD /* Model.swift in Sources */,
 				2355C2822B5D3F09009C84AD /* Submesh.swift in Sources */,
+				23795A062B6ED0640002B45B /* MouseController.swift in Sources */,
 				2355C2A42B6282BD009C84AD /* ShadowRenderPass.swift in Sources */,
 				236DD2692B53DB600093E308 /* Renderer.swift in Sources */,
+				23795A042B6ED0190002B45B /* KeyboardController.swift in Sources */,
 				2355C2072B592750009C84AD /* Transform.swift in Sources */,
 				2355C1F52B5558D9009C84AD /* PipelineStates.swift in Sources */,
 				2355C2972B5DF03C009C84AD /* AmbientLight.swift in Sources */,
@@ -390,6 +421,7 @@
 				2355C2842B5DA003009C84AD /* GameEngine.swift in Sources */,
 				2355C1F82B55A83D009C84AD /* MathLibrary.swift in Sources */,
 				2355C1F22B54B4BE009C84AD /* Shaders.metal in Sources */,
+				23795A082B6ED0DE0002B45B /* TouchController.swift in Sources */,
 				2355C2922B5DE557009C84AD /* Sunlight.swift in Sources */,
 				2355C2952B5DECAB009C84AD /* Lighting.metal in Sources */,
 				2355C2992B5DF07A009C84AD /* Light.swift in Sources */,
